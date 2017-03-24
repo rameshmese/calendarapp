@@ -1,7 +1,5 @@
 package com.ramesh.calendarapp.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +22,7 @@ public class EventController {
 	UserManager userManager;
 
 	@RequestMapping(value = "/addevent", method = RequestMethod.GET)
-	public  @ResponseBody Event addEvents(
+	public  @ResponseBody Object addEvents(
 			@RequestParam(value = "userName", required = true) String userName,
 			@RequestParam(value = "pwd", required = true) String pwd,
 			@RequestParam(value = "sartTime", required = false) Long startTime,
@@ -36,19 +34,23 @@ public class EventController {
 			) 
     {
 		Event event=null;
-		if(userManager.checkAdmin(userName,pwd)){	
-			int eventID=eventManager.getUniqueEventID();
-			event=new Event(eventID, eventName, eventDis, userName, startTime, endTime, venue,groupName);
-			eventManager.saveEvent(event);
-		}else{
-			return null;
+		try{
+			if(userManager.checkAdmin(userName,pwd)){	
+				int eventID=eventManager.getUniqueEventID();
+				event=new Event(eventID, eventName, eventDis, userName, startTime, endTime, venue,groupName);
+				eventManager.saveEvent(event);
+			}else{
+				return "Authentication Failed";
+			}
+		}catch(Exception e){
+			return e.getMessage();
 		}
 		return event;
     }
 
 	
 	@RequestMapping(value = "/listbyid", method = RequestMethod.GET)
-	public  @ResponseBody Event listEmployeesByEventID(
+	public  @ResponseBody Object listEmployeesByEventID(
 			@RequestParam(value = "value", required = false) String value
 			)	{
 		try{
@@ -56,17 +58,15 @@ public class EventController {
 					Integer id=Integer.valueOf(value.trim());
 					if(id!=null)
 						return eventManager.getEvent(id);
-//					return eventManager.getEvent(value);
-//					return eventManager.getEventsByGroup(value);
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			return e.getMessage();
 		}
-		return null;
+		return "Unable to retrive data";
 	}
 	
 	@RequestMapping(value = "/listbyname", method = RequestMethod.GET)
-	public  @ResponseBody List<Event> listEmployeesByEventName(
+	public  @ResponseBody Object listEmployeesByEventName(
 			@RequestParam(value = "value", required = false) String value
 			)	{
 		try{
@@ -77,12 +77,12 @@ public class EventController {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return null;
+		return "Unable to retrive data";
 	}
 	
 	
 	@RequestMapping(value = "/listbycreator", method = RequestMethod.GET)
-	public  @ResponseBody List<Event> listEmployeesByEventCreator(
+	public  @ResponseBody Object listEmployeesByEventCreator(
 			@RequestParam(value = "value", required = false) String value
 			)	{
 		try{
@@ -92,11 +92,11 @@ public class EventController {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return null;
+		return "Unable to retrive data";
 	}
 	
 	@RequestMapping(value = "/listbygroup", method = RequestMethod.GET)
-	public  @ResponseBody List<Event> listEmployeesByGroup(
+	public  @ResponseBody Object listEmployeesByGroup(
 			@RequestParam(value = "value", required = false) String value
 			)	{
 		try{
@@ -106,18 +106,18 @@ public class EventController {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return null;
+		return "Unable to retrive data";
 	}
 	
 	
 	@RequestMapping(value = "/listall", method = RequestMethod.GET)
-	public  @ResponseBody List<Event> listAllEmployees()	{
+	public  @ResponseBody Object listAllEmployees()	{
 		try{
 			return eventManager.listEvents();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return null;
+		return "Unable to retrive data";
 	}
 	
 	
@@ -138,8 +138,5 @@ public class EventController {
 			return e.getMessage();
 		}
 	}
-	
-	
-
 
 }
