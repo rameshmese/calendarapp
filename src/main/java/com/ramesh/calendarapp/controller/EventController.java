@@ -122,11 +122,20 @@ public class EventController {
 	
 	
 	@RequestMapping(value = "/healthCheck", method = RequestMethod.GET)
-	public  @ResponseBody Object healthCheck()	{
+	public  @ResponseBody String healthCheck()	{
 		try{
-			return eventManager.healthCheck();
+			return String.valueOf(eventManager.healthCheck());
 		}catch(Exception e){
-			return e;
+			return e.getMessage();
+		}
+	}
+	
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public  @ResponseBody String app()	{
+		try{
+			return "Calendar Application is Running";
+		}catch(Exception e){
+			return e.getMessage();
 		}
 	}
 	
