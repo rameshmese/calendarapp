@@ -24,7 +24,7 @@ public class EventController {
 	UserManager userManager;
 
 	@RequestMapping(value = "/addevent", method = RequestMethod.GET)
-	public  @ResponseBody Event addEmployees(
+	public  @ResponseBody Event addEvents(
 			@RequestParam(value = "userName", required = true) String userName,
 			@RequestParam(value = "pwd", required = true) String pwd,
 			@RequestParam(value = "sartTime", required = false) Long startTime,
